@@ -1,0 +1,65 @@
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #f7f9fc;
+  color: #222;
+}
+
+.container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+.card {
+  background: #fff;
+  border-radius: 10px;
+  padding: 16px;
+  margin-bottom: 16px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+}
+
+button {
+  border: none;
+  background: #1d4ed8;
+  color: white;
+  border-radius: 6px;
+  padding: 8px 12px;
+  cursor: pointer;
+  margin-right: 8px;
+}
+
+button.secondary {
+  background: #475569;
+}
+
+input, select, textarea {
+  width: 100%;
+  box-sizing: border-box;
+  margin-top: 6px;
+  margin-bottom: 12px;
+  padding: 8px;
+}
+
+.status-bar {
+  display: flex;
+  gap: 6px;
+}
+
+.status-step {
+  flex: 1;
+  height: 8px;
+  border-radius: 999px;
+  background: #cbd5e1;
+}
+
+.status-step.active {
+  background: #16a34a;
+}
+
+.nav-link {
+  margin-right: 12px;
+  color: #1d4ed8;
+  text-decoration: underline;
+  cursor: pointer;
+}

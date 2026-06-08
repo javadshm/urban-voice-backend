@@ -6,23 +6,31 @@ require('dotenv').config();
 const authRoutes = require('./routes/auth');
 const submissionRoutes = require('./routes/submissions');
 const authorityRoutes = require('./routes/authority');
+const aiRoutes = require('./routes/ai');
 const { errorHandler } = require('./middleware/errorHandler');
 
 const app = express();
 
 // Middleware
 app.use(helmet());
+const allowedOrigins = (process.env.FRONTEND_URL || 'http://localhost:3000,http://localhost:3001')
+  .split(',')
+  .map((origin) => origin.trim())
+  .filter(Boolean);
+
 app.use(cors({
-  origin: process.env.FRONTEND_URL || 'http://localhost:3000',
+  origin: allowedOrigins,
   credentials: true
 }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use('/uploads', express.static('uploads'));
 
 // Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/submissions', submissionRoutes);
 app.use('/api/authority', authorityRoutes);
+app.use('/api', aiRoutes);
 
 // Health check
 app.get('/api/health', (req, res) => {

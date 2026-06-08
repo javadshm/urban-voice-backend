@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Urban Voice Authority Dashboard</title>
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <main class="container">
+    <h1>Authority Dashboard</h1>
+
+    <section class="card">
+      <button id="refreshBtn">Refresh Pending Submissions</button>
+      <p id="statusText"></p>
+    </section>
+
+    <section class="card">
+      <h2>Pending Submissions</h2>
+      <ul id="submissionList"></ul>
+    </section>
+
+    <section class="card" id="detailsCard" hidden>
+      <h2>Submission Details</h2>
+      <pre id="submissionDetails"></pre>
+
+      <h3>Send Response</h3>
+      <label>Authority Name</label>
+      <input id="authorityName" value="City Authority" />
+      <label>Response Text</label>
+      <textarea id="responseText" rows="4" placeholder="Write response..."></textarea>
+      <button id="sendResponseBtn">Send Response</button>
+      <button id="markHandledBtn" class="secondary">Mark as Handled</button>
+    </section>
+  </main>
+
+  <script src="./script.js"></script>
+</body>
+</html>

@@ -9,6 +9,7 @@ yarn-error.log*
 .DS_Store
 dist/
 build/
+uploads/
 .vscode/
 .idea/
 *.swp
