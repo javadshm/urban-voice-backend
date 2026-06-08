@@ -19,10 +19,26 @@ const shouldUseS3 = () => {
 
 const saveLocally = async (fileBuffer, fileName) => {
   const uploadsRoot = path.join(process.cwd(), 'uploads');
-  const destination = path.join(uploadsRoot, fileName);
+  const safeFileName = sanitizeFileName(fileName);
+  const rootPath = path.resolve(uploadsRoot);
+  const destination = path.resolve(rootPath, safeFileName);
+
+  if (!destination.startsWith(`${rootPath}${path.sep}`)) {
+    throw new Error('Invalid file path');
+  }
+
   await fs.mkdir(path.dirname(destination), { recursive: true });
   await fs.writeFile(destination, fileBuffer);
-  return `/uploads/${fileName}`;
+  return `/uploads/${safeFileName}`;
+};
+
+const sanitizeFileName = (fileName) => {
+  return String(fileName || '')
+    .replace(/\\/g, '/')
+    .split('/')
+    .filter(Boolean)
+    .map((segment) => segment.replace(/[^a-zA-Z0-9._-]/g, '_'))
+    .join('/');
 };
 
 const uploadToS3 = async (fileBuffer, fileName) => {
@@ -48,7 +64,7 @@ const uploadToS3 = async (fileBuffer, fileName) => {
 
 const getFromS3 = async (fileName) => {
   if (!shouldUseS3()) {
-    const localPath = path.join(process.cwd(), 'uploads', fileName);
+    const localPath = path.resolve(process.cwd(), 'uploads', sanitizeFileName(fileName));
     return fs.readFile(localPath);
   }
 

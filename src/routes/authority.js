@@ -1,9 +1,19 @@
 const express = require('express');
+const rateLimit = require('express-rate-limit');
 const Response = require('../models/Response');
 const Submission = require('../models/Submission');
 const { asyncHandler } = require('../middleware/errorHandler');
 
 const router = express.Router();
+const authorityRateLimit = rateLimit({
+  windowMs: 60 * 1000,
+  max: 60,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: 'Too many requests. Please try again in a minute.' }
+});
+
+router.use(authorityRateLimit);
 
 // Authority gets pending submissions (simplified - should have proper auth)
 router.get('/pending', asyncHandler(async (req, res) => {

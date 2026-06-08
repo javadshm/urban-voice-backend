@@ -1,5 +1,6 @@
 const express = require('express');
 const multer = require('multer');
+const path = require('path');
 const Submission = require('../models/Submission');
 const auth = require('../middleware/auth');
 const { asyncHandler } = require('../middleware/errorHandler');
@@ -20,7 +21,8 @@ router.post('/upload', auth, upload.single('voice'), asyncHandler(async (req, re
   }
 
   // Upload to S3
-  const fileName = `submissions/${req.userId}/${Date.now()}-${req.file.originalname}`;
+  const safeOriginalName = path.basename(req.file.originalname).replace(/[^a-zA-Z0-9._-]/g, '_');
+  const fileName = `submissions/${req.userId}/${Date.now()}-${safeOriginalName}`;
   const s3Path = await uploadToS3(req.file.buffer, fileName);
 
   // Create submission in database
