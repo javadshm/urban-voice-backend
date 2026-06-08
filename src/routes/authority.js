@@ -7,9 +7,17 @@ const router = express.Router();
 
 // Authority gets pending submissions (simplified - should have proper auth)
 router.get('/pending', asyncHandler(async (req, res) => {
-  // TODO: Implement authority authentication
-  // For now, this is a placeholder
-  res.json({ message: 'Get pending submissions for authority' });
+  const submissions = await Submission.findPendingForAuthority();
+  res.json({ submissions });
+}));
+
+// Authority gets one submission details
+router.get('/:submissionId', asyncHandler(async (req, res) => {
+  const submission = await Submission.findById(req.params.submissionId);
+  if (!submission) {
+    return res.status(404).json({ error: 'Submission not found' });
+  }
+  res.json({ submission });
 }));
 
 // Authority sends response to submission
@@ -34,6 +42,20 @@ router.post('/:submissionId/respond', asyncHandler(async (req, res) => {
   res.json({
     message: 'Response sent successfully',
     response: response
+  });
+}));
+
+// Mark submission as handled without sending a detailed text response.
+router.post('/:submissionId/mark-handled', asyncHandler(async (req, res) => {
+  const submission = await Submission.findById(req.params.submissionId);
+  if (!submission) {
+    return res.status(404).json({ error: 'Submission not found' });
+  }
+
+  await Submission.updateStatus(req.params.submissionId, 'responded');
+
+  res.json({
+    message: 'Submission marked as handled'
   });
 }));
 

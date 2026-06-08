@@ -35,7 +35,28 @@ services:
       - postgres
     volumes:
       - ./src:/app/src
+      - ./uploads:/app/uploads
     command: npm run dev
+    networks:
+      - urban_voice_network
+
+  frontend:
+    build: ./frontend
+    container_name: urban_voice_frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+    networks:
+      - urban_voice_network
+
+  authority_dashboard:
+    build: ./authority-dashboard
+    container_name: urban_voice_authority_dashboard
+    ports:
+      - "3001:80"
+    depends_on:
+      - backend
     networks:
       - urban_voice_network
 

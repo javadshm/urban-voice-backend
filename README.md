@@ -38,8 +38,10 @@ This is the backend API for the Urban Voice hackathon project. It handles:
    ```bash
    docker-compose up --build
    ```
-   - Backend: http://localhost:5000
+   - Backend API: http://localhost:5000
    - Database: localhost:5432
+   - Frontend app: http://localhost:3000
+   - Authority dashboard: http://localhost:3001
 
 4. **Run Locally**
    ```bash
@@ -66,7 +68,15 @@ GET    /api/submissions/:id      - Get submission details (requires token)
 
 ### Authority
 ```
+GET    /api/authority/pending                    - Get pending submissions
+GET    /api/authority/:submissionId              - Get one submission details
 POST   /api/authority/:submissionId/respond  - Send response to submission
+POST   /api/authority/:submissionId/mark-handled - Mark submission handled
+```
+
+### AI Processing (Mock)
+```
+POST   /api/process-submission/:submissionId - Run mock transcription/translation/category
 ```
 
 ## Database Schema
@@ -157,10 +167,10 @@ curl -X POST http://localhost:5000/api/submissions/upload \
 ## Next Steps
 
 1. ✅ Backend scaffold complete
-2. 🔄 Frontend team: Build QR code landing page & voice recorder
-3. 🔄 AI team: Implement audio processing pipeline
-4. 🔄 Authority team: Build authority dashboard
-5. 🔄 DevOps team: Set up deployment & monitoring
+2. ✅ Beginner-friendly frontend included in `frontend/`
+3. ✅ Mock AI processing endpoint included in `src/routes/ai.js`
+4. ✅ Authority dashboard included in `authority-dashboard/`
+5. 🔄 Optional: replace mock AI with real cloud AI services
 
 ## Support
 

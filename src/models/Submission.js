@@ -33,6 +33,20 @@ class Submission {
     return result.rows;
   }
 
+  // Get pending submissions for authority dashboard
+  static async findPendingForAuthority() {
+    const query = `
+      SELECT s.*, u.full_name, u.email, r.response_text, r.authority_name, r.updated_at as response_date
+      FROM submissions s
+      JOIN users u ON u.id = s.user_id
+      LEFT JOIN responses r ON s.id = r.submission_id
+      WHERE s.status IN ('pending', 'processing', 'transcribed')
+      ORDER BY s.created_at DESC;
+    `;
+    const result = await pool.query(query);
+    return result.rows;
+  }
+
   // Update submission status
   static async updateStatus(submissionId, status) {
     const query = `
@@ -53,6 +67,23 @@ class Submission {
       RETURNING *;
     `;
     const result = await pool.query(query, [originalText, translatedText, detectedLanguage, submissionId]);
+    return result.rows[0];
+  }
+
+  // Update AI results in one place (transcription + category + status)
+  static async updateAiResults(submissionId, originalText, translatedText, detectedLanguage, issueCategory) {
+    const query = `
+      UPDATE submissions 
+      SET transcription = $1,
+          transcription_translated = $2,
+          detected_language = $3,
+          issue_category = $4,
+          status = 'transcribed',
+          updated_at = NOW()
+      WHERE id = $5
+      RETURNING *;
+    `;
+    const result = await pool.query(query, [originalText, translatedText, detectedLanguage, issueCategory, submissionId]);
     return result.rows[0];
   }
 }
